@@ -181,9 +181,14 @@ class ZDatabase
 
 class ZWeChat
 {
+    static private $_instance;
     static public function factory() {
-        $options = load('Config')->load('wechat')->get('wechat');
-        return new \EasyWeChat\Foundation\Application($options);
+
+        if (!self::$_instance) {
+            $options = load('Config')->load('wechat')->get('wechat');
+            self::$_instance = new \EasyWeChat\Foundation\Application($options);
+        }
+        return self::$_instance;
     }
 }
 
