@@ -2,6 +2,8 @@
 
 class MessageModel extends Model
 {
+    private $_openid;
+
     public function __construct()
     {
         $this->app = load('Loader')->wechat();
@@ -12,11 +14,13 @@ class MessageModel extends Model
         $server = $this->app->server;
 
         $server->setMessageHandler(function ($message) {
-            // $message->FromUserName // 用户的 openid
-            // $message->MsgType // 消息类型：event, text....
-            $message->MsgType = 'image';
-            $message->PicUrl = "http://class.xmtopnews.com/images/class.jpeg";
-//            return "您好！欢迎关注我!";
+             $this->_openid = $message->FromUserName; // 用户的 openid
+            if (strcmp($message->MsgType, 'text') === 0) {
+                if (strcmp($message->Content, '上课') === 0) {
+                    return "上课！";
+                }
+            }
+            return "您好！欢迎关注我!";
         });
         $response = $server->serve();
         $response->send();
@@ -29,7 +33,7 @@ class MessageModel extends Model
 
     public function getOpenid()
     {
-
+        return $this->_openid;
     }
 
 }
