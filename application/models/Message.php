@@ -17,7 +17,8 @@ class MessageModel extends Model
              $this->_openid = $message->FromUserName; // 用户的 openid
             if (strcmp($message->MsgType, 'text') === 0) {
                 if (strcmp($message->Content, '上课') === 0) {
-                    return "上课！";
+                    $mClass = new ClassModel();
+                    return $mClass->replay();
                 }
             }
             return "您好！欢迎关注我!";
