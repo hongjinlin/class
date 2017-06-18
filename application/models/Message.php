@@ -21,7 +21,7 @@ class MessageModel extends Model
                     return $mClass->replay();
                 }
             }
-            return "您好！欢迎关注我!";
+            return "SB弯弯";
         });
         $response = $server->serve();
         $response->send();
