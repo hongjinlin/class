@@ -18,7 +18,7 @@ class MessageModel extends Model
             if (strcmp($message->MsgType, 'text') === 0) {
                 if (strcmp($message->Content, '上课') === 0) {
                     $mClass = new ClassModel();
-                    return $mClass->replay();
+                    return new Image(['media_id' => 'H0778zNDRpZq9kWmnI4ZnY8WnLPpd8xq_KOqLCET_NUEzaXUJ95gLo0Ie4R-vxkk']);
                 }
             }
             return "SB弯弯";
