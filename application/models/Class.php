@@ -9,7 +9,7 @@ class ClassModel extends Model
         $mediaId = $uploadData->media_id;
 
         $mReply = new ReplyModel();
-        return $mReply->replayImg();
+        return $mReply->replayImg($mediaId);
 
 
     }
