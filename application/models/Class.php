@@ -35,6 +35,7 @@ class ClassModel extends Model
         $qrCode->writeFile(APP_PATH . '/../public/images/qrcode.png');
 
         Image::configure(array('driver' => 'imagick'));
+        $headImg = Image::make($userInfo->headimgurl)->resize(88, 88);
         $img = Image::make(APP_PATH . '/../public/images/class.jpeg');
         $img->text($userInfo->nickname, 160, 75, function($font) {
             $font->file(APP_PATH . '/../public/font/simsun.ttf');
@@ -43,7 +44,8 @@ class ClassModel extends Model
             $font->align('left');
             $font->valign('top');
         });
-        $img->insert(APP_PATH . '/../public/images/qrcode.png', 'top-left', 70, 782)->save(APP_PATH . '/../public/images/test.jpeg');
+        $img->insert(APP_PATH . '/../public/images/qrcode.png', 'top-left', 70, 782);
+        $img->insert($headImg, 'top-left', 46, 38)->save(APP_PATH . '/../public/images/test.jpeg');
     }
 
 }
