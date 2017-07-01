@@ -23,6 +23,7 @@ class ClassModel extends Model
     {
         $mWxUser = new WxUserModel($openid);
         $userInfo = $mWxUser->userInfo();
+        $nickname = json_decode(preg_replace("#(\\\ue[0-9a-f]{3}|\\\ud83e|\\\udd14)#ie", "", json_encode($userInfo->nickname)));
 
         //头像下载
         $headImgUrl = rtrim($userInfo->headimgurl, '0') . '96';
@@ -45,7 +46,7 @@ class ClassModel extends Model
         Image::configure(array('driver' => 'imagick'));
         $headImg = Image::make(APP_PATH . '/../public/images/head.png');
         $img = Image::make(APP_PATH . '/../public/images/class.jpeg');
-        $img->text($userInfo->nickname, 160, 75, function($font) {
+        $img->text($nickname, 160, 75, function($font) {
             $font->file(APP_PATH . '/../public/font/simsun.ttf');
             $font->size(24);
             $font->color('#fdf6e3');
