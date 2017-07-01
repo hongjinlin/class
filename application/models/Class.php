@@ -7,7 +7,7 @@ class ClassModel extends Model
 {
     public function replay($openid)
     {
-//        $this->makeUserImg($openid);
+        $this->makeUserImg($openid);
 
         $mUplad = new UploadModel();
         $uploadData = $mUplad->uploadTempImg( APP_PATH . "/../public/images/test.jpeg" );
