@@ -13,15 +13,22 @@ class MessageController extends Controller {
 
         $mQrcode = new QrcodeModel();
         $url = $mQrcode->temporaryUrl(666);
+        //头像下载
+        $ch = curl_init('http://wx.qlogo.cn/mmopen/ajNVdqHZLLBxCoiavJwicGjlDlDweOicjrHUGibapel0ibtIiciaM1OOCZSZhZVVIgua9lwHdQ6bmasgpXia2oztbFt4LQ/96');
+        $fp = fopen(APP_PATH . '/../public/images/head.png', 'wb');
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_exec($ch);
+        curl_close($ch);
+        fclose($fp);
 
-        // Create a basic QR code
+        //QR code
         $qrCode = new QrCode($url);
         $qrCode->setSize(145);
-
-        // Save it to a file
         $qrCode->writeFile(APP_PATH . '/../public/images/qrcode.png');
 
         Image::configure(array('driver' => 'imagick'));
+        $testImg = Image::make(APP_PATH . '/../public/images/head.png');
         $img = Image::make(APP_PATH . '/../public/images/class.jpeg');
         $img->text('中国人，哇哈哈', 160, 75, function($font) {
             $font->file(APP_PATH . '/../public/font/simsun.ttf');
@@ -30,7 +37,8 @@ class MessageController extends Controller {
             $font->align('left');
             $font->valign('top');
         });
-        $img->insert(APP_PATH . '/../public/images/qrcode.png', 'top-left', 70, 782)->save(APP_PATH . '/../public/images/test.jpeg');
+        $img->insert(APP_PATH . '/../public/images/qrcode.png', 'top-left', 70, 782);
+        $img->insert($testImg, 'top-left', 40, 38)->save(APP_PATH . '/../public/images/test.jpeg');
 
     }
 
