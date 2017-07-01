@@ -35,7 +35,7 @@ class ClassModel extends Model
         $qrCode->writeFile(APP_PATH . '/../public/images/qrcode.png');
 
         Image::configure(array('driver' => 'imagick'));
-        $headImg = Image::make($userInfo->headimgurl)->resize(88, 88);
+//        $headImg = Image::make($userInfo->headimgurl)->resize(88, 88);
         $img = Image::make(APP_PATH . '/../public/images/class.jpeg');
         $img->text($userInfo->nickname, 160, 75, function($font) {
             $font->file(APP_PATH . '/../public/font/simsun.ttf');
