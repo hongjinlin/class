@@ -45,7 +45,7 @@ class ClassModel extends Model
             $font->valign('top');
         });
         $img->insert(APP_PATH . '/../public/images/qrcode.png', 'top-left', 70, 782);
-        $img->insert($headImg, 'top-left', 46, 38)->save(APP_PATH . '/../public/images/test.jpeg');
+        $img->insert($userInfo->headimgurl, 'top-left', 46, 38)->save(APP_PATH . '/../public/images/test.jpeg');
     }
 
 }
