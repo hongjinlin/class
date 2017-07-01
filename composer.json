@@ -1,5 +1,13 @@
 {
     "require": {
-        "overtrue/wechat": "~3.1"
+        "overtrue/wechat": "~3.1",
+        "endroid/qrcode": "^2.2",
+        "intervention/image": "^2.3"
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
     }
 }
