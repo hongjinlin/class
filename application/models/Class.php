@@ -40,6 +40,7 @@ class ClassModel extends Model
 
         } else {
             $mediaId = $mUser->getMediaId();
+            $log->error('register fail mediaId', array($mediaId));
         }
 
         $mReply = new ReplyModel();
