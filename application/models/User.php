@@ -35,9 +35,6 @@ class UserModel extends Model
     }
 
     public function getUserById($id){
-    	if($this->_userInfo){
-    		return $this->_userInfo;
-    	}
 
     	$this->dbr->where('id', (int)$id);
     	$this->dbr->from('user');
@@ -50,9 +47,6 @@ class UserModel extends Model
     }
 
     public function getUserByOpenid($openid){
-        if($this->_userInfo){
-            return $this->_userInfo;
-        }
 
         $this->dbr->where('openid', $openid);
         $this->dbr->from('user');

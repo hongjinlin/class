@@ -9,7 +9,11 @@ class ClassModel extends Model
 {
     public function replay($openid, $recommend)
     {
+        $log = new Logger('register');
+        $log->pushHandler(new StreamHandler(APP_PATH . "/logs/register_fail.log", Logger::ERROR));
+        $log->error('register fail', $openid);
         $mUser = new UserModel();
+
         if (!$mUser->getUserByOpenid($openid)) {
 
             $mWxUser = new WxUserModel($openid);
@@ -27,8 +31,8 @@ class ClassModel extends Model
             $data['recommend'] = $recommend;
 
             if (!$mUser->register($data)) {
-                $log = new Logger('register');
-                $log->pushHandler(new StreamHandler(APP_PATH . "/logs/register_fail.log", Logger::ERROR));
+
+
                 $log->error('register fail', $userInfo);
             }
 
