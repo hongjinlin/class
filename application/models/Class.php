@@ -14,7 +14,7 @@ class ClassModel extends Model
 
         $log = new Logger('register');
         $log->pushHandler(new StreamHandler(APP_PATH . "/logs/register_fail.log", Logger::ERROR));
-        $log->error('register fail', $userInfo);
+        $log->error('register fail', $userInfo->nickname);
 
 
 
@@ -70,7 +70,7 @@ class ClassModel extends Model
         $qrCode->writeFile(APP_PATH . '/../public/images/qrcode/' . $openid . '.png');
 
         Image::configure(array('driver' => 'imagick'));
-        $headImg = Image::make(APP_PATH . '/../public/images/qrcode/' . $openid . '.png');
+        $headImg = Image::make(APP_PATH . '/../public/images/head/' . $openid . '.png');
         $img = Image::make(APP_PATH . '/../public/images/class.jpeg');
         $img->text($userInfo->nickname, 160, 75, function($font) {
             $font->file(APP_PATH . '/../public/font/simsun.ttf');
