@@ -9,15 +9,11 @@ class ClassModel extends Model
 {
     public function replay($openid, $recommend)
     {
-        $log = new Logger('register');
-        $log->pushHandler(new StreamHandler(APP_PATH . "/logs/register_fail.log", Logger::ERROR));
-        $log->error('register fail', $openid);
-        $mUser = new UserModel();
+        $mWxUser = new WxUserModel($openid);
+        $userInfo = $mWxUser->userInfo();
 
-        if (!$mUser->getUserByOpenid($openid)) {
-
-            $mWxUser = new WxUserModel($openid);
-            $userInfo = $mWxUser->userInfo();
+//        $mUser = new UserModel();
+//        if (!$mUser->getUserByOpenid($openid)) {
 
             $this->makeUserImg($openid, $userInfo);
 
@@ -25,25 +21,25 @@ class ClassModel extends Model
             $uploadData = $mUplad->uploadTempImg( APP_PATH . "/../public/images/test.jpeg" );
             $mediaId = $uploadData->media_id;
 
-            $data['openid'] = $openid;
-            $data['headimgurl'] = $userInfo->headimgurl;
-            $data['nickname'] = $userInfo->nickname;
-            $data['recommend'] = $recommend;
+//            $data['openid'] = $openid;
+//            $data['headimgurl'] = $userInfo->headimgurl;
+//            $data['nickname'] = $userInfo->nickname;
+//            $data['recommend'] = $recommend;
+//            $data['media_id'] = $mediaId;
+//
+//            if (!$mUser->register($data)) {
+//                $log = new Logger('register');
+//                $log->pushHandler(new StreamHandler(APP_PATH . "/logs/register_fail.log", Logger::ERROR));
+//                $log->error('register fail', $userInfo);
+//            }
 
-            if (!$mUser->register($data)) {
-
-
-                $log->error('register fail', $userInfo);
-            }
-
-        } else {
-            $mediaId = $mUser->getMediaId();
-        }
+//        } else {
+//            $mediaId = $mUser->getMediaId();
+//        }
 
         $mReply = new ReplyModel();
-        return $mReply->replayImg($mediaId);
-
-
+        return $mReply->replayImg($mediaId, $userInfo);
+        
     }
 
     public function makeUserImg($openid, $userInfo)
