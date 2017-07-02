@@ -12,9 +12,9 @@ class UserModel extends Model
             return false;
         }
 
-        $config = load('Config')->load('config');
+        $config = load('Config');
 
-        $actId = $config['activity_id'];
+        $actId = $config->get('activity_id');
 
     	$this->dbw->set('openid', $data['openid']);
     	$this->dbw->set('nickname', base64_encode($data['nickname']));
