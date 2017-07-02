@@ -38,8 +38,8 @@ class ClassModel extends Model
 //        }
 
         $mReply = new ReplyModel();
-        return $mReply->replayImg($mediaId, $userInfo);
-        
+        return $mReply->replayImg($mediaId);
+
     }
 
     public function makeUserImg($openid, $userInfo)
