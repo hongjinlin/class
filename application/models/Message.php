@@ -19,12 +19,12 @@ class MessageModel extends Model
             if (strcmp($message->MsgType, 'text') === 0) {
                 if (strcmp($message->Content, '上课') === 0) {
                     $mClass = new ClassModel();
-                    return $mClass->replay($message->FromUserName);
+                    return $mClass->replay($message->FromUserName, $recommend);
                 }
             } elseif (strcmp($message->MsgType, 'event') === 0 && strcmp($message->Event, 'CLICK') === 0) {
                 if (strcmp($message->EventKey, 'V1001_MY_PIC') === 0) {
                     $mClass = new ClassModel();
-                    return $mClass->replay($message->FromUserName);
+                    return $mClass->replay($message->FromUserName, $recommend);
                 }
             }
             return 'SB弯弯！';
