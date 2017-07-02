@@ -18,6 +18,15 @@ class ClassModel extends Model
         $mUser = new UserModel();
         if (!$mUser->getUserByOpenid($openid)) {
 
+            $data['openid'] = $openid;
+            $data['headimgurl'] = $userInfo->headimgurl;
+            $data['nickname'] = $userInfo->nickname;
+            $data['recommend'] = $recommend;
+
+            if (!$mUser->register($data)) {
+                $log->error('register fail', array($userInfo->nickname));
+            }
+
             $uid = $mUser->getUid();
             $log->error('register fail uid', array($uid));
             $this->makeUserImg($openid, $userInfo, $uid);
@@ -26,15 +35,8 @@ class ClassModel extends Model
             $uploadData = $mUplad->uploadTempImg( APP_PATH . "/../public/images/user/" . $openid . ".jpeg" );
             $mediaId = $uploadData->media_id;
 
-            $data['openid'] = $openid;
-            $data['headimgurl'] = $userInfo->headimgurl;
-            $data['nickname'] = $userInfo->nickname;
-            $data['recommend'] = $recommend;
-            $data['media_id'] = $mediaId;
+            $mUser->updateMediaId($mediaId);
 
-            if (!$mUser->register($data)) {
-                $log->error('register fail', array($userInfo->nickname));
-            }
 
         } else {
             $mediaId = $mUser->getMediaId();

@@ -16,6 +16,8 @@ class UserModel extends Model
 
         $actId = $config['activity_id'];
 
+        $this->_actId = $actId;
+
     	$this->dbw->set('openid', $data['openid']);
     	$this->dbw->set('nickname', base64_encode($data['nickname']));
     	$this->dbw->set('headimg', $data['headimgurl']);
@@ -51,6 +53,8 @@ class UserModel extends Model
     public function getUserByOpenid($openid){
 
         $this->dbr->where('openid', $openid);
+        $this->dbr->where('activity_id', $this->_actId);
+
         $this->dbr->from('user');
 
         $this->_userInfo = $this->dbr->get()->row_array();
@@ -77,6 +81,17 @@ class UserModel extends Model
 
     public function getUid() {
         return $this->_uid;
+    }
+
+    public function updateMediaId($mediaId) {
+        if (!$mediaId) {
+            return false;
+        }
+        $this->dbw->set('media_id', $mediaId);
+        $this->dbw->where('id', $this->_uid);
+        $this->dbw->from('user');
+        
+        $this->dbw->update();
     }
 
 
