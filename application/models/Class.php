@@ -14,12 +14,12 @@ class ClassModel extends Model
 
         $log = new Logger('register');
         $log->pushHandler(new StreamHandler(APP_PATH . "/logs/register_fail.log", Logger::ERROR));
-        $log->error('register fail', array($userInfo->nickname));
 
 
 
-//        $mUser = new UserModel();
-//        if (!$mUser->getUserByOpenid($openid)) {
+
+        $mUser = new UserModel();
+        if (!$mUser->getUserByOpenid($openid)) {
 
             $this->makeUserImg($openid, $userInfo);
 
@@ -27,21 +27,19 @@ class ClassModel extends Model
             $uploadData = $mUplad->uploadTempImg( APP_PATH . "/../public/images/user/" . $openid . ".jpeg" );
             $mediaId = $uploadData->media_id;
 
-//            $data['openid'] = $openid;
-//            $data['headimgurl'] = $userInfo->headimgurl;
-//            $data['nickname'] = $userInfo->nickname;
-//            $data['recommend'] = $recommend;
-//            $data['media_id'] = $mediaId;
-//
-//            if (!$mUser->register($data)) {
-//                $log = new Logger('register');
-//                $log->pushHandler(new StreamHandler(APP_PATH . "/logs/register_fail.log", Logger::ERROR));
-//                $log->error('register fail', $userInfo);
-//            }
+            $data['openid'] = $openid;
+            $data['headimgurl'] = $userInfo->headimgurl;
+            $data['nickname'] = $userInfo->nickname;
+            $data['recommend'] = $recommend;
+            $data['media_id'] = $mediaId;
 
-//        } else {
-//            $mediaId = $mUser->getMediaId();
-//        }
+            if (!$mUser->register($data)) {
+                $log->error('register fail', array($userInfo->nickname));
+            }
+
+        } else {
+            $mediaId = $mUser->getMediaId();
+        }
 
         $mReply = new ReplyModel();
         return $mReply->replayImg($mediaId);
