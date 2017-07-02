@@ -14,7 +14,7 @@ class ClassModel extends Model
 
         $log = new Logger('register');
         $log->pushHandler(new StreamHandler(APP_PATH . "/logs/register_fail.log", Logger::ERROR));
-        $log->error('register fail', $userInfo->nickname);
+        $log->error('register fail', array($userInfo->nickname));
 
 
 
