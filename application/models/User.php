@@ -5,6 +5,9 @@ class UserModel extends Model
     public function __construct(){
         $this->dbr = load('Loader')->database('dbr');
         $this->dbw = load('Loader')->database('dbw');
+
+        $config = load('Config')->get('config');
+        $this->_actId = $config['activity_id'];
     }
 
     public function register($data){
@@ -12,18 +15,14 @@ class UserModel extends Model
             return false;
         }
 
-        $config = load('Config')->get('config');
 
-        $actId = $config['activity_id'];
-
-        $this->_actId = $actId;
 
     	$this->dbw->set('openid', $data['openid']);
     	$this->dbw->set('nickname', base64_encode($data['nickname']));
     	$this->dbw->set('headimg', $data['headimgurl']);
         $this->dbw->set('recommend', (int)$data['recommend']);
         $this->dbw->set('media_id', $data['media_id']);
-    	$this->dbw->set('activity_id', $actId);
+    	$this->dbw->set('activity_id', $this->_actId);
     	$this->dbw->set('regtime', time());
     	$this->dbw->from('user');
 
