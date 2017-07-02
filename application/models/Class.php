@@ -24,7 +24,7 @@ class ClassModel extends Model
             $this->makeUserImg($openid, $userInfo);
 
             $mUplad = new UploadModel();
-            $uploadData = $mUplad->uploadTempImg( APP_PATH . "/../public/images/test.jpeg" );
+            $uploadData = $mUplad->uploadTempImg( APP_PATH . "/../public/images/user/" . $openid . ".jpeg" );
             $mediaId = $uploadData->media_id;
 
 //            $data['openid'] = $openid;
