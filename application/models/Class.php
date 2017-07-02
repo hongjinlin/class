@@ -15,13 +15,12 @@ class ClassModel extends Model
         $log = new Logger('register');
         $log->pushHandler(new StreamHandler(APP_PATH . "/logs/register_fail.log", Logger::ERROR));
 
-
-
-
         $mUser = new UserModel();
         if (!$mUser->getUserByOpenid($openid)) {
 
-            $this->makeUserImg($openid, $userInfo);
+            $uid = $mUser->getUid();
+
+            $this->makeUserImg($openid, $userInfo, $uid);
 
             $mUplad = new UploadModel();
             $uploadData = $mUplad->uploadTempImg( APP_PATH . "/../public/images/user/" . $openid . ".jpeg" );
@@ -46,7 +45,7 @@ class ClassModel extends Model
 
     }
 
-    public function makeUserImg($openid, $userInfo)
+    public function makeUserImg($openid, $userInfo, $uid)
     {
 
         //头像下载
@@ -61,7 +60,7 @@ class ClassModel extends Model
 
         //QR code
         $mQrcode = new QrcodeModel();
-        $url = $mQrcode->temporaryUrl(666);
+        $url = $mQrcode->temporaryUrl($uid);
 
         $qrCode = new QrCode($url);
         $qrCode->setSize(145);

@@ -74,6 +74,10 @@ class UserModel extends Model
         return false;
     }
 
+    public function getUid() {
+        return $this->_userInfo['id'];
+    }
+
 
 
 }
