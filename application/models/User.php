@@ -28,6 +28,7 @@ class UserModel extends Model
     	$insertId = $this->dbw->insert();
 
     	if($insertId){
+    	    $this->_uid = $insertId;
     		return true;
     	}else {
     		return false;
