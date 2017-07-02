@@ -14,20 +14,21 @@ class MessageModel extends Model
         $server = $this->app->server;
 
         $server->setMessageHandler(function ($message) {
-             $this->_openid = $message->FromUserName; // 用户的 openid
-            if (strcmp($message->MsgType, 'text') === 0) {
-                if (strcmp($message->Content, '上课') === 0) {
-                    $mClass = new ClassModel();
-                    return $mClass->replay($message->FromUserName);
-                }
-            } elseif (strcmp($message->MsgType, 'event') === 0 && strcmp($message->Event, 'CLICK') === 0) {
-                if (strcmp($message->EventKey, 'V1001_MY_PIC') === 0) {
-                    $mClass = new ClassModel();
-                    return $mClass->replay($message->FromUserName);
-                }
-            }
+            $this->_openid = $message->FromUserName; // 用户的 openid
+            $recommend = ltrim($message->EventKey, 'qrscene_');
+//            if (strcmp($message->MsgType, 'text') === 0) {
+//                if (strcmp($message->Content, '上课') === 0) {
+//                    $mClass = new ClassModel();
+//                    return $mClass->replay($message->FromUserName);
+//                }
+//            } elseif (strcmp($message->MsgType, 'event') === 0 && strcmp($message->Event, 'CLICK') === 0) {
+//                if (strcmp($message->EventKey, 'V1001_MY_PIC') === 0) {
+//                    $mClass = new ClassModel();
+//                    return $mClass->replay($message->FromUserName);
+//                }
+//            }
             $mClass = new ClassModel();
-            return $mClass->replay($message->FromUserName);
+            return $mClass->replay($message->FromUserName, $recommend);
         });
         $response = $server->serve();
         $response->send();

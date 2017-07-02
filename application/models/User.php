@@ -8,33 +8,19 @@ class UserModel extends Model
     }
 
     public function register($data){
-
-        $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-
-    	if(!$email || !$password){
-    		return false;
-    	}
-
-    	if($this->isemailExist($email)){
-
-    		return false;
-
-    	}
-
-        $config = load('Config')->load('config');
-
-        $hashAlgorithm = $config['hash_algorithm'];
-        $hashOptionCost = $config['hash_option_cost']
-
-    	$passwordHash = password_hash($password, $hashAlgorithm, $hashOptionCost);
-
-        if($passwordHash === false){
-            $this->_error = 'Password Hash Failed';
+        if (!$data['openid']) {
             return false;
         }
 
-    	$this->dbw->set('email', $email);
-    	$this->dbw->set('password', $passwordHash);
+        $config = load('Config')->load('config');
+
+        $actId = $config['activity_id'];
+
+    	$this->dbw->set('openid', $data['openid']);
+    	$this->dbw->set('nickname', base64_encode($data['nickname']));
+    	$this->dbw->set('headimg', $data['headimgurl']);
+    	$this->dbw->set('recommend', $data['recommend']);
+    	$this->dbw->set('activity_id', $actId);
     	$this->dbw->set('regtime', time());
     	$this->dbw->from('user');
 
@@ -48,73 +34,51 @@ class UserModel extends Model
 
     }
 
-    public function login($email, $password){
-
-    	if(!$email || !$password){
-    		return false;
-    	}
-
-    	if(!$this->getUserByName($email)){
-            return false;
-        }
-
-        if(password_verify($password, $this->_userInfo['password']) !== false){
-            return true;
-        }
-
-        return false;
-    }
-
-    public function getUserByName($email){
-    	if($this->_userInfo){
-    		return $this->_userInfo;
-    	}
-
-    	$this->dbr->where('email', $this->_cleanInput($email));
-    	$this->dbr->from('user');
-
-    	$this->_userInfo = $this->dbr->get()->row_array();
-    	$this->_uid = $this->_userInfo['id'];
-
-    	return $this->_userInfo;
-    }
-
     public function getUserById($id){
     	if($this->_userInfo){
     		return $this->_userInfo;
     	}
 
-    	$this->dbr->where('id', $this->_cleanInput($id));
+    	$this->dbr->where('id', (int)$id);
     	$this->dbr->from('user');
 
     	$this->_userInfo = $this->dbr->get()->row_array();
     	$this->_uid = $this->_userInfo['id'];
+    	$this->_openid = $this->_userInfo['openid'];
 
     	return $this->_userInfo;
     }
 
+    public function getUserByOpenid($openid){
+        if($this->_userInfo){
+            return $this->_userInfo;
+        }
+
+        $this->dbr->where('openid', $openid);
+        $this->dbr->from('user');
+
+        $this->_userInfo = $this->dbr->get()->row_array();
+        $this->_uid = $this->_userInfo['id'];
+        $this->_openid = $this->_userInfo['openid'];
+
+        return $this->_userInfo;
+    }
+
     public function getUserInfo(){
-    	if($this->_userInfo){
-    		return $this->_userInfo;
-    	}
-
-    	return $this->getUserById($this->_uid);
+        return $this->_userInfo;
     }
 
-    public function isemailExist($email){
-    	if(!$email){
-    		return false;
-    	}
-
-    	$rzt = $this->getUserByName($email);
-
-    	if($rzt){
-    		return true;
-    	}else{
-    		return false;
-    	}
-
+    public function getMediaId() {
+        return $this->_userInfo['media_id'];
     }
+
+    public function isUserExist($openid) {
+        if ($this->getUserByOpenid($openid)) {
+            return true;
+        }
+        return false;
+    }
+
 
 
 }

@@ -2,7 +2,8 @@
     "require": {
         "overtrue/wechat": "~3.1",
         "endroid/qrcode": "^2.2",
-        "intervention/image": "^2.3"
+        "intervention/image": "^2.3",
+        "monolog/monolog": "^1.23"
     },
     "repositories": {
         "packagist": {
