@@ -12,14 +12,14 @@ class UserModel extends Model
             return false;
         }
 
-        $config = load('Config');
+        $config = load('Config')->get('config');
 
-        $actId = $config->get('activity_id');
+        $actId = $config['activity_id'];
 
     	$this->dbw->set('openid', $data['openid']);
     	$this->dbw->set('nickname', base64_encode($data['nickname']));
     	$this->dbw->set('headimg', $data['headimgurl']);
-        $this->dbw->set('recommend', $data['recommend']);
+        $this->dbw->set('recommend', (int)$data['recommend']);
         $this->dbw->set('media_id', $data['media_id']);
     	$this->dbw->set('activity_id', $actId);
     	$this->dbw->set('regtime', time());
