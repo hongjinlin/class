@@ -75,7 +75,7 @@ class UserModel extends Model
     }
 
     public function getUid() {
-        return $this->_userInfo['id'];
+        return $this->_uid;
     }
 
 

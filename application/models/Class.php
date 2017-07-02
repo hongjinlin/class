@@ -19,7 +19,7 @@ class ClassModel extends Model
         if (!$mUser->getUserByOpenid($openid)) {
 
             $uid = $mUser->getUid();
-
+            $log->error('register fail uid', array($uid));
             $this->makeUserImg($openid, $userInfo, $uid);
 
             $mUplad = new UploadModel();
