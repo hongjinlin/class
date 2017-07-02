@@ -12,6 +12,12 @@ class ClassModel extends Model
         $mWxUser = new WxUserModel($openid);
         $userInfo = $mWxUser->userInfo();
 
+        $log = new Logger('register');
+        $log->pushHandler(new StreamHandler(APP_PATH . "/logs/register_fail.log", Logger::ERROR));
+        $log->error('register fail', $userInfo);
+
+
+
 //        $mUser = new UserModel();
 //        if (!$mUser->getUserByOpenid($openid)) {
 
