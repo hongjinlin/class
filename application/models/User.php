@@ -30,7 +30,7 @@ class UserModel extends Model
     	$insertId = $this->dbw->insert();
 
     	if($insertId){
-    	    $this->_uid = $insertId;
+    	    $this->_uid = $this->dbw->insert_id();
     		return true;
     	}else {
     		return false;
@@ -90,7 +90,7 @@ class UserModel extends Model
         $this->dbw->set('media_id', $mediaId);
         $this->dbw->where('id', $this->_uid);
         $this->dbw->from('user');
-        
+
         $this->dbw->update();
     }
 
