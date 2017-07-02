@@ -7,7 +7,7 @@ use Monolog\Handler\StreamHandler;
 
 class ClassModel extends Model
 {
-    public function replay($openid)
+    public function replay($openid, $recommend)
     {
         $mUser = new UserModel();
         if (!$mUser->getUserByOpenid($openid)) {
@@ -44,7 +44,6 @@ class ClassModel extends Model
 
     public function makeUserImg($openid, $userInfo)
     {
-
 
         //头像下载
         $headImgUrl = rtrim($userInfo->headimgurl, '0') . '96';
