@@ -21,13 +21,28 @@ class ClassModel extends Model
         $mUser = new UserModel();
         if (!$mUser->getUserByOpenid($openid)) {
 
-            $data['openid'] = $openid;
-            $data['recommend'] = $recommend;
+//            $data['openid'] = $openid;
+//            $data['recommend'] = $recommend;
+//
+//            if (!$mUser->register($data)) {
+//                $log->error('register fail', array($userInfo->nickname));
+//            }
+//
+//            $uid = $mUser->getUid();
+//            $this->makeUserImg($openid, $userInfo, $uid);
+//
+//            $mUplad = new UploadModel();
+//            $uploadData = $mUplad->uploadTempImg( APP_PATH . "/../public/images/user/" . $openid . ".jpeg" );
+//            $mediaId = $uploadData->media_id;
+//
+//            $mUser->updateMediaId($mediaId);
 
-            if (!$mUser->register($data)) {
-                $log->error('register fail', array($userInfo->nickname));
-            }
+            return '请先关注';
 
+        }
+
+        $mediaId = $mUser->getMediaId();
+        if (!$mediaId) {
             $uid = $mUser->getUid();
             $this->makeUserImg($openid, $userInfo, $uid);
 
@@ -35,26 +50,12 @@ class ClassModel extends Model
             $uploadData = $mUplad->uploadTempImg( APP_PATH . "/../public/images/user/" . $openid . ".jpeg" );
             $mediaId = $uploadData->media_id;
 
-            $mUser->updateMediaId($mediaId);
-
-        } else {
-            $mediaId = $mUser->getMediaId();
             if (!$mediaId) {
-                $uid = $mUser->getUid();
-                $this->makeUserImg($openid, $userInfo, $uid);
-
-                $mUplad = new UploadModel();
-                $uploadData = $mUplad->uploadTempImg( APP_PATH . "/../public/images/user/" . $openid . ".jpeg" );
-                $mediaId = $uploadData->media_id;
-
-                if (!$mediaId) {
-                    $log->error('register fail mediaId', array($mediaId));
-                    return;
-                }
-                $mUser->updateHeadimgAndNickname($data);
-                $mUser->updateMediaId($mediaId);
-
+                $log->error('register fail mediaId', array($mediaId));
+                return;
             }
+            $mUser->updateHeadimgAndNickname($data);
+            $mUser->updateMediaId($mediaId);
         }
 
         $mReply = new ReplyModel();
