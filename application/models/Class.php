@@ -20,7 +20,21 @@ class ClassModel extends Model
 
         $mUser = new UserModel();
         if (!$mUser->getUserByOpenid($openid)) {
-            return '请先关注我！';
+            $data['openid'] = $openid;
+            $data['recommend'] = $recommend;
+            if (!$mUser->register($data)) {
+                $log->error('register fail', array($userInfo->nickname));
+            }
+            $uid = $mUser->getUid();
+            $log->error('register fail uid', array($uid));
+            $this->makeUserImg($openid, $userInfo, $uid);
+            $mUplad = new UploadModel();
+            $uploadData = $mUplad->uploadTempImg( APP_PATH . "/../public/images/user/" . $openid . ".jpeg" );
+            $mediaId = $uploadData->media_id;
+            $mUser->updateMediaId($mediaId);
+
+            $mReply = new ReplyModel();
+            return $mReply->replayImg($mediaId);
         }
 
         $mediaId = $mUser->getMediaId();
