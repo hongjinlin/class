@@ -27,10 +27,8 @@ class MessageModel extends Model
                     return $mClass->replay($message->FromUserName, $recommend);
                 }
             } elseif (strcmp($message->MsgType, 'event') === 0 && strcmp($message->Event, 'subscribe') === 0) {
-                if (strcmp($message->EventKey, 'V1001_MY_PIC') === 0) {
                     $mClass = new ClassModel();
                     return $mClass->replayForSubscribe($message->FromUserName, $recommend);
-                }
             }
             return 'SB弯弯！';
         });
