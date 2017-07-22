@@ -105,6 +105,10 @@ class UserModel extends Model
         $this->dbw->update();
     }
 
-
+    public function getShareCount() {
+        $this->dbr->where('recommend', $this->_uid);
+        $this->dbr->from('user');
+        return $this->dbr->count_all_results();
+    }
 
 }

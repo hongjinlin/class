@@ -20,43 +20,35 @@ class ClassModel extends Model
 
         $mUser = new UserModel();
         if (!$mUser->getUserByOpenid($openid)) {
-
-//            $data['openid'] = $openid;
-//            $data['recommend'] = $recommend;
-//
-//            if (!$mUser->register($data)) {
-//                $log->error('register fail', array($userInfo->nickname));
-//            }
-//
-//            $uid = $mUser->getUid();
-//            $this->makeUserImg($openid, $userInfo, $uid);
-//
-//            $mUplad = new UploadModel();
-//            $uploadData = $mUplad->uploadTempImg( APP_PATH . "/../public/images/user/" . $openid . ".jpeg" );
-//            $mediaId = $uploadData->media_id;
-//
-//            $mUser->updateMediaId($mediaId);
-
-            return '请先关注';
-
+            return '请先关注我！';
         }
 
         $mediaId = $mUser->getMediaId();
-        if (!$mediaId) {
-            $uid = $mUser->getUid();
-            $this->makeUserImg($openid, $userInfo, $uid);
 
-            $mUplad = new UploadModel();
-            $uploadData = $mUplad->uploadTempImg( APP_PATH . "/../public/images/user/" . $openid . ".jpeg" );
-            $mediaId = $uploadData->media_id;
-
-            if (!$mediaId) {
-                $log->error('register fail mediaId', array($mediaId));
-                return;
+        if ($mediaId) {
+            //已发送过海报
+            $shareCount = $mUser->getShareCount();
+            $config = load('Config')->get('config');
+            $needShareNum = $config['need_share_number'];
+            if ($shareCount < $needShareNum) {
+                return '您还需求邀请' . $needShareNum - $shareCount . '位朋友才能完成任务！';
             }
-            $mUser->updateHeadimgAndNickname($data);
-            $mUser->updateMediaId($mediaId);
+            return '我是百度网盘链接！';
         }
+
+        $uid = $mUser->getUid();
+        $this->makeUserImg($openid, $userInfo, $uid);
+
+        $mUplad = new UploadModel();
+        $uploadData = $mUplad->uploadTempImg( APP_PATH . "/../public/images/user/" . $openid . ".jpeg" );
+        $mediaId = $uploadData->media_id;
+
+        if (!$mediaId) {
+            $log->error('register fail mediaId', array($mediaId));
+            return;
+        }
+        $mUser->updateHeadimgAndNickname($data);
+        $mUser->updateMediaId($mediaId);
 
         $mReply = new ReplyModel();
         return $mReply->replayImg($mediaId);
