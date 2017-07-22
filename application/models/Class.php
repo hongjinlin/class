@@ -51,7 +51,7 @@ class ClassModel extends Model
                     $log->error('register fail mediaId', array($mediaId));
                     return;
                 }
-                $mUser->updateHeadimgAndNickname($data)
+                $mUser->updateHeadimgAndNickname($data);
                 $mUser->updateMediaId($mediaId);
 
             }
