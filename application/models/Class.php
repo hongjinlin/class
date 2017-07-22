@@ -28,7 +28,6 @@ class ClassModel extends Model
             }
 
             $uid = $mUser->getUid();
-            $log->error('register fail uid', array($uid));
             $this->makeUserImg($openid, $userInfo, $uid);
 
             $mUplad = new UploadModel();
@@ -36,11 +35,13 @@ class ClassModel extends Model
             $mediaId = $uploadData->media_id;
 
             $mUser->updateMediaId($mediaId);
-
-
+            
         } else {
             $mediaId = $mUser->getMediaId();
-            $log->error('register fail mediaId', array($mediaId));
+            if (!$mediaId) {
+                $log->error('register fail mediaId', array($mediaId));
+                return;
+            }
         }
 
         $mReply = new ReplyModel();
