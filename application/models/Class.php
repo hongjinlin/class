@@ -31,7 +31,8 @@ class ClassModel extends Model
             $config = load('Config')->get('config');
             $needShareNum = $config['need_share_number'];
             if ($shareCount < $needShareNum) {
-                return '您还需求邀请' . $needShareNum - $shareCount . '位朋友才能完成任务！';
+                $needNum = $needShareNum - $shareCount;
+                return "您还需求邀请{$needNum}位朋友才能完成任务！";
             }
             return '我是百度网盘链接！';
         }
