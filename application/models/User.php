@@ -93,6 +93,18 @@ class UserModel extends Model
         $this->dbw->update();
     }
 
+    public function updateHeadimgAndNickname($data) {
+        if (!$data) {
+            return false;
+        }
+        $this->dbw->set('nickname', base64_encode($data['nickname']));
+        $this->dbw->set('headimg', $data['headimgurl']);
+        $this->dbw->where('id', $this->_uid);
+        $this->dbw->from('user');
+
+        $this->dbw->update();
+    }
+
 
 
 }

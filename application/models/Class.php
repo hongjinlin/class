@@ -12,15 +12,16 @@ class ClassModel extends Model
         $mWxUser = new WxUserModel($openid);
         $userInfo = $mWxUser->userInfo();
 
-        $log = new Logger('register');
+        $data['headimgurl'] = $userInfo->headimgurl;
+        $data['nickname'] = $userInfo->nickname;
+
+        $log = new Logger('register by CLICK');
         $log->pushHandler(new StreamHandler(APP_PATH . "/logs/register_fail.log", Logger::ERROR));
 
         $mUser = new UserModel();
         if (!$mUser->getUserByOpenid($openid)) {
 
             $data['openid'] = $openid;
-            $data['headimgurl'] = $userInfo->headimgurl;
-            $data['nickname'] = $userInfo->nickname;
             $data['recommend'] = $recommend;
 
             if (!$mUser->register($data)) {
@@ -35,17 +36,54 @@ class ClassModel extends Model
             $mediaId = $uploadData->media_id;
 
             $mUser->updateMediaId($mediaId);
-            
+
         } else {
             $mediaId = $mUser->getMediaId();
             if (!$mediaId) {
-                $log->error('register fail mediaId', array($mediaId));
-                return;
+                $uid = $mUser->getUid();
+                $this->makeUserImg($openid, $userInfo, $uid);
+
+                $mUplad = new UploadModel();
+                $uploadData = $mUplad->uploadTempImg( APP_PATH . "/../public/images/user/" . $openid . ".jpeg" );
+                $mediaId = $uploadData->media_id;
+
+                if (!$mediaId) {
+                    $log->error('register fail mediaId', array($mediaId));
+                    return;
+                }
+                $mUser->updateHeadimgAndNickname($data)
+                $mUser->updateMediaId($mediaId);
+
             }
         }
 
         $mReply = new ReplyModel();
         return $mReply->replayImg($mediaId);
+
+    }
+
+    public function replayForSubscribe($openid, $recommend)
+    {
+        $log = new Logger('register by Subscribe');
+        $log->pushHandler(new StreamHandler(APP_PATH . "/logs/register_fail.log", Logger::ERROR));
+        $mUser = new UserModel();
+        if (!$mUser->getUserByOpenid($openid)) {
+
+            $data['openid'] = $openid;
+            $data['recommend'] = $recommend;
+
+            if (!$mUser->register($data)) {
+                $log->error('register fail', array($userInfo->nickname));
+            }
+            return 'SB!!';
+        } else {
+            $mediaId = $mUser->getMediaId();
+            if (!$mediaId) {
+                return 'SB!!!';
+            }
+            $mReply = new ReplyModel();
+            return $mReply->replayImg($mediaId);
+        }
 
     }
 
